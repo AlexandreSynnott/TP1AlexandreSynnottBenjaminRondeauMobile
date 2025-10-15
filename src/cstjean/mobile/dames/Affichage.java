@@ -22,18 +22,16 @@ public class Affichage {
      */
     public String generate(Damier damier) {
         StringBuilder builder = new StringBuilder();
-        int manoury = 1;
 
         for (int row = 0; row < Damier.TAILLE; row++) {
             for (int col = 0; col < Damier.TAILLE; col++) {
                 if ((row + col) % 2 == 1) {
-                    // case foncée : contient un pion ("n" ou "b") ou null si vide
+                    // case foncée : contient un pion ou est vide
                     String valeur = damier.getCase(row, col);
                     builder.append(valeur == null ? "-" : valeur);
-                    manoury++;
                 } else {
-
-                    builder.append("-");
+                    // case claire : juste pour le repérage, mais neutre
+                    builder.append(" ");
                 }
 
                 if (col < Damier.TAILLE - 1) {
@@ -45,4 +43,6 @@ public class Affichage {
 
         return builder.toString().trim();
     }
+
+
 }
