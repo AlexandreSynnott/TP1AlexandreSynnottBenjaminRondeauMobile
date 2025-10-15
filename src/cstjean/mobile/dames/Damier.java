@@ -4,12 +4,21 @@ public class Damier {
 
     public final String[][] plateau; // 10x10
     public static final int TAILLE = 10;
-    private Pion[] cases;
-
+    private final Pion[] cases;
 
     public Damier() {
         plateau = new String[TAILLE][TAILLE];
         initialiser();
+
+        cases = new Pion[50];
+
+        for (int i = 0; i < 50; i++) {
+            if (i < 20) {
+                cases[i] = new Pion(Pion.Couleur.NOIR);
+            } else if (i >= 30) {
+                cases[i] = new Pion(Pion.Couleur.BLANC);
+            }
+        }
     }
     private boolean verifierPosition(int position) {
         return position >= 1 && position <= 50;
@@ -35,7 +44,7 @@ public class Damier {
             }
         }
 
-        // Joueur noir (en haut) : rangées 0 à 3
+        // Joueur noir (en haut) : rangées 0 à 3.
         for (int r = 0; r <= 3; r++) {
             for (int c = 0; c < TAILLE; c++) {
                 if ((r + c) % 2 == 1) { // cases foncées

@@ -6,16 +6,16 @@ public class Main {
     public static void main(String[] args) {
         Affichage a = new Affichage();
         Damier damier = new Damier();
-        a.generate(damier);
+        System.out.println(a.generate(damier));
 
         // Exemple : un pion blanc atteint la dernière rangée
         damier.setCase(0, 3, "b");
 
         System.out.println("\n--- Avant promotion ---");
-        a.generate(damier);
+       System.out.println(a.generate(damier));
 
         System.out.println("\n--- Après vérification de la promotion ---");
         Promotion.verifierPromotion(damier);
-        a.generate(damier);
+        System.out.println(a.generate(damier));
     }
 }
