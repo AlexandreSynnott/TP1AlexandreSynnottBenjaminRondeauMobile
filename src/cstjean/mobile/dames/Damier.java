@@ -28,7 +28,7 @@ public class Damier {
             }
         }
 
-        // Joueur blanc (en bas) : rangées 6 à 9
+        // Joueur blanc (en bas) : rangées 6 à 9.
         for (int r = 6; r < TAILLE; r++) {
             for (int c = 0; c < TAILLE; c++) {
                 if ((r + c) % 2 == 1) {
