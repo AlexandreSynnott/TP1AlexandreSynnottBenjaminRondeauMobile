@@ -4,8 +4,9 @@ package cstjean.mobile.dames;
  * Classe responsable de générer une représentation textuelle d'un damier.
  *
  * <p>
- * Chaque case noire du damier est représentée par un pion ou un tiret s'il est vide.
- * La numérotation des cases suit le système Manoury (1 à 50 sur les cases noires).
+ * Chaque case noire du damier est représentée par un pion ("n" ou "b") ou un tiret s'il est vide.
+ * La numérotation des cases suit le système Manoury (1 à 50 sur les cases noires) — le compteur
+ * Manoury est maintenu ici pour cohérence même s'il n'est pas affiché.
  * </p>
  *
  * @author Alexandre Synnott
@@ -16,10 +17,6 @@ public class Affichage {
     /**
      * Génère une chaîne représentant le damier sous forme textuelle.
      *
-     * <p>
-     * Parcourt les lignes et colonnes du damier. Les cases noires contiennent un pion ou un
-     * tiret si elles sont vides. La numérotation des cases suit le système Manoury.
-     *
      * @param damier Le damier à afficher
      * @return La représentation textuelle du damier
      */
@@ -27,18 +24,25 @@ public class Affichage {
         StringBuilder builder = new StringBuilder();
         int manoury = 1;
 
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++) {
+        for (int row = 0; row < Damier.TAILLE; row++) {
+            for (int col = 0; col < Damier.TAILLE; col++) {
                 if ((row + col) % 2 == 1) {
-                    Pion pion = damier.getPion(manoury);
-                    builder.append(pion == null ? "-" : pion.getRepresentation());
-                    manoury++;
+                    // case foncée : contient un pion ("n" ou "b") ou null si vide
+                    String valeur = damier.getCase(row, col);
+                    builder.append(valeur == null ? "-" : valeur);
+                    manoury++; // on incrémente la numérotation Manoury pour les cases noires
                 } else {
+                    // case claire : on affiche un tiret (ou on pourrait afficher un point)
                     builder.append("-");
+                }
+
+                if (col < Damier.TAILLE - 1) {
+                    builder.append(" "); // séparation pour lisibilité
                 }
             }
             builder.append("\n");
         }
+
         return builder.toString().trim();
     }
 }
