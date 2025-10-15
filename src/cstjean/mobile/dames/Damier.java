@@ -50,22 +50,6 @@ public class Damier {
         plateau[ligne][colonne] = valeur;
     }
 
-    // Affichage console simple
-    public void afficher() {
-        System.out.println("   0 1 2 3 4 5 6 7 8 9");
-        for (int r = 0; r < TAILLE; r++) {
-            System.out.print(r + " ");
-            for (int c = 0; c < TAILLE; c++) {
-                if ((r + c) % 2 == 0)
-                    System.out.print(" ."); // case claire
-                else {
-                    String valeur = plateau[r][c];
-                    if (valeur == null) System.out.print(" _"); // case foncée vide
-                    else System.out.print(" " + valeur);
-                }
-            }
-            System.out.println();
-        }
-    }
+
 }
 
