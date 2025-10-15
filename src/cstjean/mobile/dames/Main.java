@@ -8,9 +8,6 @@ public class Main {
         Damier damier = new Damier();
         System.out.println(a.generate(damier));
 
-        // Exemple : un pion blanc atteint la dernière rangée
-        damier.setCase(0, 3, "b");
-
         System.out.println("\n--- Avant promotion ---");
        System.out.println(a.generate(damier));
 

@@ -30,14 +30,14 @@ public class Affichage {
                     // case foncée : contient un pion ("n" ou "b") ou null si vide
                     String valeur = damier.getCase(row, col);
                     builder.append(valeur == null ? "-" : valeur);
-                    manoury++; // on incrémente la numérotation Manoury pour les cases noires
+                    manoury++;
                 } else {
-                    // case claire : on affiche un tiret (ou on pourrait afficher un point)
+
                     builder.append("-");
                 }
 
                 if (col < Damier.TAILLE - 1) {
-                    builder.append(" "); // séparation pour lisibilité
+                    builder.append(" ");
                 }
             }
             builder.append("\n");
