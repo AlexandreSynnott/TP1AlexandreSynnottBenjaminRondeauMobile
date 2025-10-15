@@ -9,6 +9,7 @@ public class Damier {
 
     public Damier() {
         plateau = new String[TAILLE][TAILLE];
+        cases = new Pion[50];
         initialiser();
     }
     private boolean verifierPosition(int position) {
