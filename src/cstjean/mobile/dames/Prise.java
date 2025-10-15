@@ -1,4 +1,4 @@
-﻿package cstjean.mobile.dames;
+package cstjean.mobile.dames;
 
 public class Prise {
 

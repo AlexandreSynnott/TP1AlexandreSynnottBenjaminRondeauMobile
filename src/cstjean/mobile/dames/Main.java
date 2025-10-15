@@ -4,17 +4,18 @@ package cstjean.mobile.dames;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
+        Affichage a = new Affichage();
         Damier damier = new Damier();
-        damier.afficher();
+        a.generate(damier);
 
         // Exemple : un pion blanc atteint la dernière rangée
         damier.setCase(0, 3, "b");
 
         System.out.println("\n--- Avant promotion ---");
-        damier.afficher();
+        a.generate(damier);
 
         System.out.println("\n--- Après vérification de la promotion ---");
         Promotion.verifierPromotion(damier);
-        damier.afficher();
+        a.generate(damier);
     }
 }
