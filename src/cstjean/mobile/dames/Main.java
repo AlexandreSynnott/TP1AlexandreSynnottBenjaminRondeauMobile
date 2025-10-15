@@ -6,6 +6,7 @@ public class Main {
     public static void main(String[] args) {
         Affichage a = new Affichage();
         Damier damier = new Damier();
+        Historique historique = new Historique();
 
         System.out.println("--- Damier initial ---");
         System.out.println(a.generate(damier));
@@ -14,7 +15,7 @@ public class Main {
         damier.setCase(4, 1, "n");
         damier.setCase(3, 2, null); //mettre "b" ou "n" pour une prise impossible
 
-        boolean priseEffectuee = Prise.prendre(damier, 5, 0, 3, 2);
+        boolean priseEffectuee = Prise.prendre(damier, historique,5, 0, 3, 2);
         if(priseEffectuee){
             System.out.println("--- Après prise ---");
         }
