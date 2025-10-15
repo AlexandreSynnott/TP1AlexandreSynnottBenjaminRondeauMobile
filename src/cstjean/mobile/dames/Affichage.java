@@ -31,7 +31,7 @@ public class Affichage {
                     builder.append(valeur == null ? "-" : valeur);
                 } else {
                     // case claire : juste pour le repérage, mais neutre
-                    builder.append(" ");
+                    builder.append("-");
                 }
 
                 if (col < Damier.TAILLE - 1) {
