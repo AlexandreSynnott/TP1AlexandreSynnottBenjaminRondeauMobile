@@ -1,4 +1,4 @@
-﻿package cstjean.mobile.dames;
+package cstjean.mobile.dames;
 
 import java.util.LinkedList;
 

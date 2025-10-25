@@ -2,41 +2,41 @@ package cstjean.mobile.dames;
 
 public class Damier {
 
-    public final String[][] plateau; // 10x10
     public static final int TAILLE = 10;
+    public final String[][] plateau; // Représente les cases visuelles
+    private Pion[] cases = new Pion[50]; // Représente les 50 cases jouables
 
     public Damier() {
         plateau = new String[TAILLE][TAILLE];
         initialiser();
-
     }
+
     private boolean verifierPosition(int position) {
         return position >= 1 && position <= 50;
     }
 
     // Initialise les positions de départ du damier
     private void initialiser() {
-        // Vider le damier
         for (int r = 0; r < TAILLE; r++) {
             for (int c = 0; c < TAILLE; c++) {
                 plateau[r][c] = null;
             }
         }
 
-        // Joueur noir (en haut) : rangées 0 à 3.
+        // Joueur noir (en haut)
         for (int r = 0; r <= 3; r++) {
             for (int c = 0; c < TAILLE; c++) {
-                if ((r + c) % 2 == 1) { // cases foncées
-                    plateau[r][c] = "n"; // pion noir
+                if ((r + c) % 2 == 1) {
+                    plateau[r][c] = "n";
                 }
             }
         }
 
-        // Joueur blanc (en bas) : rangées 6 à 9.
+        // Joueur blanc (en bas)
         for (int r = 6; r < TAILLE; r++) {
             for (int c = 0; c < TAILLE; c++) {
                 if ((r + c) % 2 == 1) {
-                    plateau[r][c] = "b"; // pion blanc
+                    plateau[r][c] = "b";
                 }
             }
         }
@@ -56,4 +56,3 @@ public class Damier {
 
 
 }
-
