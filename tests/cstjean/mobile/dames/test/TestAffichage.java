@@ -1,4 +1,4 @@
-﻿package test;
+﻿package cstjean.mobile.dames.test;
 
 import cstjean.mobile.dames.Affichage;
 import cstjean.mobile.dames.Damier;

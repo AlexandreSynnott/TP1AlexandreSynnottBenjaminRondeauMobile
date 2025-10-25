@@ -10,30 +10,24 @@ public class Perdu {
      * Le joueur perd s'il n'a plus de pions ou s'il ne peut plus se déplacer.
      *
      * @param damier le damier actuel
-     * @param couleur la couleur du joueur ("b" pour blanc, "n" pour noir)
+     * @param couleur la couleur du joueur (BLANC ou NOIR)
      * @return true si le joueur a perdu, false sinon
      */
-    public static boolean joueurAPerdu(Damier damier, String couleur) {
-        // Vérifie si le joueur a encore des pièces
+    public static boolean joueurAPerdu(Damier damier, Pion.Couleur couleur) {
         if (!aDesPions(damier, couleur)) {
             return true;
         }
-
-        // Vérifie si le joueur peut se déplacer
         if (!peutSeDeplacer(damier, couleur)) {
             return true;
         }
-
         return false;
     }
 
-    /**
-     * Vérifie si le joueur possède encore au moins une pièce sur le damier.
-     */
-    private static boolean aDesPions(Damier damier, String couleur) {
-        for (int ligne = 0; ligne < 8; ligne++) {
-            for (int colonne = 0; colonne < 8; colonne++) {
-                if (couleur.equals(damier.getCase(ligne, colonne))) {
+    private static boolean aDesPions(Damier damier, Pion.Couleur couleur) {
+        for (int l = 0; l < Damier.TAILLE; l++) {
+            for (int c = 0; c < Damier.TAILLE; c++) {
+                Pion pion = damier.getCase(l, c);
+                if (pion != null && pion.getCouleur() == couleur) {
                     return true;
                 }
             }
@@ -41,67 +35,47 @@ public class Perdu {
         return false;
     }
 
-    /**
-     * Vérifie si le joueur peut se déplacer (déplacement simple ou prise possible).
-     */
-    private static boolean peutSeDeplacer(Damier damier, String couleur) {
-        int direction = couleur.equals("b") ? -1 : 1; // les blancs montent, les noirs descendent
+    private static boolean peutSeDeplacer(Damier damier, Pion.Couleur couleur) {
+        int direction = (couleur == Pion.Couleur.BLANC) ? -1 : 1; // BLANC monte, NOIR descend
+        for (int l = 0; l < Damier.TAILLE; l++) {
+            for (int c = 0; c < Damier.TAILLE; c++) {
+                Pion pion = damier.getCase(l, c);
+                if (pion != null && pion.getCouleur() == couleur) {
 
-        for (int ligne = 0; ligne < 8; ligne++) {
-            for (int colonne = 0; colonne < 8; colonne++) {
-                if (couleur.equals(damier.getCase(ligne, colonne))) {
-
-                    // Test déplacement simple diagonal gauche/droite
-                    int nouvelleLigne = ligne + direction;
-
-                    // Déplacement vers la gauche
-                    if (colonne - 1 >= 0 && estCaseVide(damier, nouvelleLigne, colonne - 1)) {
-                        return true;
+                    // Vérifie déplacement diagonal simple
+                    int nl = l + direction;
+                    if (nl >= 0 && nl < Damier.TAILLE) {
+                        if (c - 1 >= 0 && damier.getCase(nl, c - 1) == null) return true;
+                        if (c + 1 < Damier.TAILLE && damier.getCase(nl, c + 1) == null) return true;
                     }
 
-                    // Déplacement vers la droite
-                    if (colonne + 1 < 8 && estCaseVide(damier, nouvelleLigne, colonne + 1)) {
-                        return true;
-                    }
-
-                    // Vérifie si une prise est possible (saut par-dessus une pièce adverse)
-                    if (prisePossible(damier, ligne, colonne, couleur)) {
-                        return true;
-                    }
+                    // Vérifie si une prise est possible
+                    if (prisePossible(damier, l, c, couleur)) return true;
                 }
             }
         }
         return false;
     }
 
-    /**
-     * Vérifie si une prise est possible pour un pion donné.
-     */
-    private static boolean prisePossible(Damier damier, int ligne, int colonne, String couleur) {
-        String ennemi = couleur.equals("b") ? "n" : "b";
+    private static boolean prisePossible(Damier damier, int l, int c, Pion.Couleur couleur) {
         int[] directions = {-1, 1};
+        Pion.Couleur ennemi = (couleur == Pion.Couleur.BLANC) ? Pion.Couleur.NOIR : Pion.Couleur.BLANC;
 
-        for (int dL : directions) {
-            for (int dC : directions) {
-                int milieuL = ligne + dL;
-                int milieuC = colonne + dC;
-                int sautL = ligne + (2 * dL);
-                int sautC = colonne + (2 * dC);
+        for (int dl : directions) {
+            for (int dc : directions) {
+                int ml = l + dl;
+                int mc = c + dc;
+                int sl = l + 2*dl;
+                int sc = c + 2*dc;
 
-                if (sautL >= 0 && sautL < 8 && sautC >= 0 && sautC < 8) {
-                    if (ennemi.equals(damier.getCase(milieuL, milieuC)) && estCaseVide(damier, sautL, sautC)) {
+                if (sl >= 0 && sl < Damier.TAILLE && sc >= 0 && sc < Damier.TAILLE) {
+                    Pion milieu = damier.getCase(ml, mc);
+                    if (milieu != null && milieu.getCouleur() == ennemi && damier.getCase(sl, sc) == null) {
                         return true;
                     }
                 }
             }
         }
         return false;
-    }
-
-    /**
-     * Vérifie si une case est vide (aucun pion).
-     */
-    private static boolean estCaseVide(Damier damier, int ligne, int colonne) {
-        return ligne >= 0 && ligne < 8 && colonne >= 0 && colonne < 8 && damier.getCase(ligne, colonne) == null;
     }
 }
