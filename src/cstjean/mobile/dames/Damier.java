@@ -8,11 +8,6 @@ public class Damier {
         plateau = new Pion[TAILLE][TAILLE];
         initialiser();
     }
-
-    private boolean verifierPosition(int position) {
-        return position >= 1 && position <= 50;
-    }
-
     // Initialise les positions de départ du damier avec des objets Pion
     private void initialiser() {
         // Vider le damier

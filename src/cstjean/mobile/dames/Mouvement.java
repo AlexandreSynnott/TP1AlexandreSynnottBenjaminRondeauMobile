@@ -88,7 +88,7 @@ public class Mouvement {
         if (Math.abs(deltaLigne) != Math.abs(deltaColonne)) return false;
 
         // Pour les pions : prise de 2 cases
-        if (piece instanceof Pion && !(piece instanceof Dame)) {
+        if (!(piece instanceof Dame)) {
             if (Math.abs(deltaLigne) == 2 && Math.abs(deltaColonne) == 2) {
                 int ligneMilieu = ligneDepart + deltaLigne / 2;
                 int colonneMilieu = colonneDepart + deltaColonne / 2;
@@ -175,7 +175,7 @@ public class Mouvement {
         int deltaColonne = colonneArrivee - colonneDepart;
 
         // Pour les pions : prise simple
-        if (piece instanceof Pion && !(piece instanceof Dame)) {
+        if (piece != null && !(piece instanceof Dame)) {
             int ligneMilieu = ligneDepart + deltaLigne / 2;
             int colonneMilieu = colonneDepart + deltaColonne / 2;
 
@@ -216,6 +216,7 @@ public class Mouvement {
             int numeroArrivee = coordonneesVersNumeroManoury(ligneArrivee, colonneArrivee);
             String notation = numeroDepart + "×" + numeroArrivee;
 
+            assert piece != null;
             if (piece.getCouleur() == Pion.Couleur.NOIR) {
                 notation = "(" + notation + ")";
             }
