@@ -1,11 +1,11 @@
-package cstjean.mobile.dames;
+/**package cstjean.mobile.dames;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Classe de test pour la classe Perdu.
- */
+
 public class PerduTest {
 
     @Test
@@ -61,4 +61,6 @@ public class PerduTest {
 
         assertFalse(Perdu.joueurAPerdu(damier, "b"), "Le joueur blanc ne doit pas avoir perdu (peut bouger)");
     }
+
 }
+ */

@@ -58,7 +58,7 @@ public class Pion {
      * @return Caractère représentant le pion
      */
     public char getRepresentation() {
-        return (couleur == Couleur.NOIR) ? 'P' : 'p';
+        return (couleur == Couleur.NOIR) ? 'n' : 'b';
     }
 
     /**

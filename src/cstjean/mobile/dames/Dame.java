@@ -21,16 +21,17 @@ public class Dame extends Pion {
     /** Constructeur par défaut (BLANC). */
     public Dame() {
         super();
+
     }
 
     /**
      * Retourne le caractère représentant la dame selon sa couleur.
      *
-     * @return 'D' pour NOIR, 'd' pour BLANC
+     * @return 'N' pour NOIR, 'B' pour BLANC
      */
     @Override
     public char getRepresentation() {
-        return (getCouleur() == Couleur.NOIR) ? 'D' : 'd';
+        return (getCouleur() == Couleur.NOIR) ? 'N' : 'B';
     }
 
     /**

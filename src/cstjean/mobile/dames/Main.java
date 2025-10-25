@@ -11,11 +11,11 @@ public class Main {
         System.out.println("--- Damier initial ---");
         System.out.println(a.generate(damier));
 
-        damier.setCase(5, 0, "b");
-        damier.setCase(4, 1, "n");
+        damier.setCase(5, 0,  new Pion(Pion.Couleur.BLANC));
+        damier.setCase(4, 1, new Pion(Pion.Couleur.NOIR));
         damier.setCase(3, 2, null); //mettre "b" ou "n" pour une prise impossible
 
-        boolean priseEffectuee = Prise.prendre(damier, historique,5, 0, 3, 2);
+        boolean priseEffectuee = Mouvement.effectuerMouvement(damier, historique,5, 0, 3, 2);
         if(priseEffectuee){
             System.out.println("--- Après prise ---");
         }
@@ -25,7 +25,7 @@ public class Main {
         System.out.println(a.generate(damier));
 
         // Exemple : un pion blanc atteint la dernière rangée
-        damier.setCase(0, 3, "b");
+        damier.setCase(0, 3, new Pion(Pion.Couleur.BLANC));
 
         System.out.println("\n--- Avant promotion ---");
         System.out.println(a.generate(damier));
@@ -35,3 +35,4 @@ public class Main {
         System.out.println(a.generate(damier));
     }
 }
+
