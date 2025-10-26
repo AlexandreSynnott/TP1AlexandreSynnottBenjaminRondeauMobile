@@ -215,7 +215,7 @@ public class Mouvement {
         return true;
     }
 
-    private static int coordonneesVersNumeroManoury(int ligne, int colonne) {
+    public static int coordonneesVersNumeroManoury(int ligne, int colonne) {
         int compteurManoury = 0;
         for (int r = 0; r < Damier.TAILLE; r++) {
             for (int c = 0; c < Damier.TAILLE; c++) {
