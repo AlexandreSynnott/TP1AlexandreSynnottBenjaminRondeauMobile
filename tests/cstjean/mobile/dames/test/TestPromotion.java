@@ -21,8 +21,7 @@ public class TestPromotion {
     /** Damier utilisé pour les tests. */
     private Damier damier;
 
-    /** Affichage pour visualiser le damier (optionnel pour tests). */
-    private Affichage affichage;
+
 
     /**
      * Initialise le damier et l'affichage avant chaque test.
@@ -30,7 +29,6 @@ public class TestPromotion {
     @Before
     public void setUp() {
         damier = new Damier();
-        affichage = new Affichage();
     }
 
     /**
