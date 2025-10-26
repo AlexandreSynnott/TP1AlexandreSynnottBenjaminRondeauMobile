@@ -7,9 +7,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import cstjean.mobile.dames.Affichage;
-import cstjean.mobile.dames.Damier;
 import cstjean.mobile.dames.Dame;
+import cstjean.mobile.dames.Damier;
 import cstjean.mobile.dames.Historique;
 import cstjean.mobile.dames.Mouvement;
 import cstjean.mobile.dames.Pion;
@@ -30,9 +29,6 @@ public class TestMouvement {
     /** Historique des mouvements utilisés pour les tests. */
     private Historique historique;
 
-    /** Affichage du damier pour les tests. */
-    private Affichage affichage;
-
     /**
      * Prépare un damier, un historique et un affichage avant chaque test.
      */
@@ -40,7 +36,6 @@ public class TestMouvement {
     public void setUp() {
         damier = new Damier();
         historique = new Historique();
-        affichage = new Affichage();
     }
 
     /**
@@ -117,7 +112,7 @@ public class TestMouvement {
         viderDamier();
 
         Dame dame = new Dame(Pion.Couleur.BLANC);
-        damier.setCase(5, 4, dame); // Case foncée (5+4=9 impair)
+        damier.setCase(5, 4, dame); // Case foncée (5+4=9 impairs)
 
         // Test déplacement en haut à gauche
         boolean resultat1 = Mouvement.effectuerMouvement(damier, historique, 5, 4, 4, 3);
@@ -324,7 +319,7 @@ public class TestMouvement {
         Mouvement.effectuerMouvement(damier, historique, 5, 4, 4, 3);
 
         assertEquals("Historique devrait avoir 1 entrée", 1, historique.obtenirHistoriqueComplet().size());
-        String mouvement = historique.obtenirHistoriqueComplet().get(0);
+        String mouvement = historique.obtenirHistoriqueComplet().getFirst();
         assertTrue("Mouvement devrait contenir '-'", mouvement.contains("-"));
     }
 
@@ -345,7 +340,7 @@ public class TestMouvement {
         Mouvement.effectuerMouvement(damier, historique, 5, 4, 3, 2);
 
         assertEquals("Historique devrait avoir 1 entrée", 1, historique.obtenirHistoriqueComplet().size());
-        String mouvement = historique.obtenirHistoriqueComplet().get(0);
+        String mouvement = historique.obtenirHistoriqueComplet().getFirst();
         assertTrue("Mouvement de prise devrait contenir '×'", mouvement.contains("×"));
     }
 
