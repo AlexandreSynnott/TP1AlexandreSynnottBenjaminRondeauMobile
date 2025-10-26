@@ -1,20 +1,45 @@
 package cstjean.mobile.dames.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import cstjean.mobile.dames.Dame;
 import cstjean.mobile.dames.Damier;
 import cstjean.mobile.dames.Pion;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
+/**
+ * Classe de test pour la classe {@link Damier}.
+ *
+ * <p>
+ * Vérifie le comportement du damier, notamment :
+ * - la gestion des cases valides et invalides,
+ * - l'initialisation des pions,
+ * - et la cohérence des rangées vides et pleines.
+ * </p>
+ *
+ * @author Alexandre Synnott
+ * @author Benjamin Rondeau
+ */
 public class TestDamier {
+
+    /** Instance du damier utilisée pour les tests. */
     private Damier damier;
 
+    /**
+     * Initialise le damier avant chaque test.
+     */
     @Before
     public void setUp() {
         damier = new Damier();
     }
 
+    /**
+     * Vérifie que l’ajout et la récupération d’une pièce
+     * sur le damier fonctionnent correctement.
+     */
     @Test
     public void testSetGetCase() {
         damier.setCase(1, 1, new Pion(Pion.Couleur.NOIR));
@@ -24,9 +49,11 @@ public class TestDamier {
         assertEquals('N', damier.getCase(1, 1).getRepresentation());
     }
 
+    /**
+     * Vérifie le comportement des cases en dehors des limites valides du damier.
+     */
     @Test
     public void testSetGetCaseCoordonneesInvalides() {
-        // Test avec coordonnées hors limites
         damier.setCase(-1, 0, new Pion(Pion.Couleur.BLANC));
         assertNull("Case (-1,0) devrait retourner null", damier.getCase(-1, 0));
 
@@ -40,10 +67,13 @@ public class TestDamier {
         assertNull("Case (5,10) devrait retourner null", damier.getCase(5, 10));
     }
 
+    /**
+     * Vérifie l’initialisation complète du damier :
+     * pions noirs en haut et pions blancs en bas.
+     */
     @Test
     public void testInitialisationDamier() {
-        // Vérifier que le damier est correctement initialisé
-        // Pions noirs en haut (rangées 0-3)
+        // Vérifie les pions noirs (rangées 0 à 3)
         for (int r = 0; r <= 3; r++) {
             for (int c = 0; c < Damier.TAILLE; c++) {
                 if ((r + c) % 2 == 1) {
@@ -55,7 +85,7 @@ public class TestDamier {
             }
         }
 
-        // Pions blancs en bas (rangées 6-9)
+        // Vérifie les pions blancs (rangées 6 à 9)
         for (int r = 6; r < Damier.TAILLE; r++) {
             for (int c = 0; c < Damier.TAILLE; c++) {
                 if ((r + c) % 2 == 1) {
@@ -68,9 +98,12 @@ public class TestDamier {
         }
     }
 
+    /**
+     * Vérifie que les rangées centrales du damier (4 et 5)
+     * sont bien initialisées comme vides.
+     */
     @Test
     public void testCasesVidesMilieu() {
-        // Les rangées du milieu (4 et 5) devraient être vides
         for (int r = 4; r <= 5; r++) {
             for (int c = 0; c < Damier.TAILLE; c++) {
                 assertNull("Case (" + r + "," + c + ") devrait être vide", damier.getCase(r, c));

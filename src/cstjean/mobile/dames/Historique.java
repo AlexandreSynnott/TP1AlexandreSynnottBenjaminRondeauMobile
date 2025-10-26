@@ -8,13 +8,22 @@ import java.util.LinkedList;
  */
 public class Historique {
 
-    // Liste contenant les mouvements joués
+    /**
+     * Liste des notations des mouvements effectués sur le damier.
+     *
+     * <p>
+     * Chaque élément correspond à un mouvement au format Manoury
+     * (par exemple "12-16" pour un déplacement ou "22×17" pour une prise).
+     */
     private LinkedList<String> listeDesMouvements = new LinkedList<>();
 
     /**
      * Ajoute un mouvement à l'historique en notation Manoury.
-     * Exemple : "31-27" ou "27x18"
-     * @param mouvementNotation description du mouvement
+     *
+     * <p>
+     * Exemple : "31-27" pour un déplacement simple ou "27×18" pour une prise.
+     *
+     * @param mouvementNotation la notation du mouvement à ajouter à l'historique
      */
     public void ajouterMouvement(String mouvementNotation) {
         this.listeDesMouvements.add(mouvementNotation);
@@ -22,7 +31,12 @@ public class Historique {
 
     /**
      * Retourne la liste complète des mouvements joués.
-     * @return la liste des mouvements en LinkedList
+     *
+     * <p>
+     * Chaque élément de la liste correspond à un mouvement au format Manoury,
+     * par exemple "12-16" pour un déplacement ou "22×17" pour une prise.
+     *
+     * @return la liste des mouvements en {@link LinkedList}
      */
     public LinkedList<String> obtenirHistoriqueComplet() {
         return this.listeDesMouvements;

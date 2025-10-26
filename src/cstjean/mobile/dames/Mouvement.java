@@ -1,5 +1,8 @@
 package cstjean.mobile.dames;
 
+/**
+ * Classe gérant les mouvements (déplacements et prises) sur le damier.
+ */
 public class Mouvement {
 
     /**
@@ -11,20 +14,17 @@ public class Mouvement {
      * @param colonneDepart   colonne de départ (0-indexée)
      * @param ligneArrivee    ligne d'arrivée (0-indexée)
      * @param colonneArrivee  colonne d'arrivée (0-indexée)
-     * @return true si le mouvement est valide et effectué, sinon false
+     * @return true si le mouvement est valide et effectué, sinon false.
      */
     public static boolean effectuerMouvement(Damier damier, Historique historique,
                                              int ligneDepart, int colonneDepart,
                                              int ligneArrivee, int colonneArrivee) {
 
-        Pion[][] plateau = damier.plateau;
-        Pion piece = plateau[ligneDepart][colonneDepart];
+        Pion piece = damier.getCase(ligneDepart, colonneDepart);
 
-        if (piece == null || plateau[ligneArrivee][colonneArrivee] != null)
+        if (piece == null || damier.getCase(ligneArrivee, colonneArrivee) != null) {
             return false;
-
-        int deltaLigne = ligneArrivee - ligneDepart;
-        int deltaColonne = colonneArrivee - colonneDepart;
+        }
 
         // Vérifier d'abord si c'est une prise
         if (estPriseValide(damier, ligneDepart, colonneDepart, ligneArrivee, colonneArrivee)) {
@@ -41,64 +41,66 @@ public class Mouvement {
         return false;
     }
 
-    /**
-     * Vérifie si un déplacement simple est valide.
-     */
     private static boolean estDeplacementSimpleValide(Damier damier, int ligneD, int colD,
                                                       int ligneA, int colA) {
-        Pion piece = damier.plateau[ligneD][colD];
-        if (piece == null) return false;
 
-        int dL = ligneA - ligneD;
-        int dC = colA - colD;
+        Pion piece = damier.getCase(ligneD, colD);
+        if (piece == null) {
+            return false;
+        }
+
+        int deltaLigneSimple = ligneA - ligneD;
+        int deltaColonneSimple = colA - colD;
 
         // Doit être diagonal
-        if (Math.abs(dL) != Math.abs(dC)) return false;
+        if (Math.abs(deltaLigneSimple) != Math.abs(deltaColonneSimple)) {
+            return false;
+        }
 
         // Déplacement simple : une seule case
-        if (Math.abs(dL) == 1) {
-            // Pour pions : vérifier la direction
-            if (piece instanceof Pion && !(piece instanceof Dame)) {
-                if (piece.getCouleur() == Pion.Couleur.BLANC && dL == -1) {
+        if (Math.abs(deltaLigneSimple) == 1) {
+            if (!(piece instanceof Dame)) { // pion normal
+                if (piece.getCouleur() == Pion.Couleur.BLANC && deltaLigneSimple == -1) {
                     return true; // Blanc va vers le haut
-                } else if (piece.getCouleur() == Pion.Couleur.NOIR && dL == 1) {
+                } else if (piece.getCouleur() == Pion.Couleur.NOIR && deltaLigneSimple == 1) {
                     return true; // Noir va vers le bas
                 }
-                return false; // Direction invalide pour un pion
-            } else if (piece instanceof Dame) {
-                return true; // Les dames peuvent aller dans toutes les directions
+                return false;
+            } else { // dame
+                return true;
             }
         }
 
         return false;
     }
 
-    /**
-     * Vérifie si une prise est valide.
-     */
     private static boolean estPriseValide(Damier damier, int ligneDepart, int colonneDepart,
                                           int ligneArrivee, int colonneArrivee) {
-        Pion piece = damier.plateau[ligneDepart][colonneDepart];
-        if (piece == null) return false;
+
+        Pion piece = damier.getCase(ligneDepart, colonneDepart);
+        if (piece == null) {
+            return false;
+        }
 
         int deltaLigne = ligneArrivee - ligneDepart;
         int deltaColonne = colonneArrivee - colonneDepart;
 
-        // Doit être diagonal
-        if (Math.abs(deltaLigne) != Math.abs(deltaColonne)) return false;
+        if (Math.abs(deltaLigne) != Math.abs(deltaColonne)) {
+            return false;
+        }
 
-        // Pour les pions : prise de 2 cases
+        // Pour les pions
         if (!(piece instanceof Dame)) {
-            if (Math.abs(deltaLigne) == 2 && Math.abs(deltaColonne) == 2) {
+            if (Math.abs(deltaLigne) == 2) {
                 int ligneMilieu = ligneDepart + deltaLigne / 2;
                 int colonneMilieu = colonneDepart + deltaColonne / 2;
-                Pion pieceMilieu = damier.plateau[ligneMilieu][colonneMilieu];
+                Pion pieceMilieu = damier.getCase(ligneMilieu, colonneMilieu);
 
                 return pieceMilieu != null && pieceMilieu.getCouleur() != piece.getCouleur();
             }
         }
 
-        // Pour les dames : prise à longue portée
+        // Pour les dames
         if (piece instanceof Dame) {
             if (Math.abs(deltaLigne) >= 2) {
                 int pas = Math.abs(deltaLigne);
@@ -108,22 +110,18 @@ public class Mouvement {
                 int ligneActuelle = ligneDepart + dirLigne;
                 int colonneActuelle = colonneDepart + dirColonne;
                 int ennemisTrouves = 0;
-                int ligneEnnemi = -1;
-                int colonneEnnemi = -1;
 
                 while (ligneActuelle != ligneArrivee && colonneActuelle != colonneArrivee) {
-                    Pion pieceCourante = damier.plateau[ligneActuelle][colonneActuelle];
+                    Pion pieceCourante = damier.getCase(ligneActuelle, colonneActuelle);
 
                     if (pieceCourante != null) {
-                        boolean estEnnemi = pieceCourante.getCouleur() != piece.getCouleur();
-                        boolean estAllie = pieceCourante.getCouleur() == piece.getCouleur();
-
-                        if (estAllie) return false; // Bloqué par un allié
-                        if (estEnnemi) {
+                        if (pieceCourante.getCouleur() == piece.getCouleur()) {
+                            return false; // Bloqué par un allié
+                        } else {
                             ennemisTrouves++;
-                            if (ennemisTrouves > 1) return false; // Plus d'un ennemi
-                            ligneEnnemi = ligneActuelle;
-                            colonneEnnemi = colonneActuelle;
+                            if (ennemisTrouves > 1) {
+                                return false;
+                            }
                         }
                     }
 
@@ -138,18 +136,15 @@ public class Mouvement {
         return false;
     }
 
-    /**
-     * Effectue un déplacement simple.
-     */
     private static boolean effectuerDeplacementSimple(Damier damier, Historique historique,
                                                       int ligneDepart, int colonneDepart,
                                                       int ligneArrivee, int colonneArrivee) {
-        Pion piece = damier.plateau[ligneDepart][colonneDepart];
 
-        damier.plateau[ligneArrivee][colonneArrivee] = piece;
-        damier.plateau[ligneDepart][colonneDepart] = null;
+        Pion piece = damier.getCase(ligneDepart, colonneDepart);
 
-        // Enregistrement dans l'historique
+        damier.setCase(ligneArrivee, colonneArrivee, piece);
+        damier.setCase(ligneDepart, colonneDepart, null);
+
         if (historique != null) {
             int numeroDepart = coordonneesVersNumeroManoury(ligneDepart, colonneDepart);
             int numeroArrivee = coordonneesVersNumeroManoury(ligneArrivee, colonneArrivee);
@@ -164,27 +159,23 @@ public class Mouvement {
         return true;
     }
 
-    /**
-     * Effectue une prise.
-     */
     private static boolean effectuerPrise(Damier damier, Historique historique,
                                           int ligneDepart, int colonneDepart,
                                           int ligneArrivee, int colonneArrivee) {
-        Pion piece = damier.plateau[ligneDepart][colonneDepart];
+
+        Pion piece = damier.getCase(ligneDepart, colonneDepart);
         int deltaLigne = ligneArrivee - ligneDepart;
         int deltaColonne = colonneArrivee - colonneDepart;
 
-        // Pour les pions : prise simple
-        if (piece != null && !(piece instanceof Dame)) {
+        if (!(piece instanceof Dame)) { // pion normal
             int ligneMilieu = ligneDepart + deltaLigne / 2;
             int colonneMilieu = colonneDepart + deltaColonne / 2;
 
-            damier.plateau[ligneArrivee][colonneArrivee] = piece;
-            damier.plateau[ligneDepart][colonneDepart] = null;
-            damier.plateau[ligneMilieu][colonneMilieu] = null;
-        }
-        // Pour les dames : prise à longue portée
-        else if (piece instanceof Dame) {
+            damier.setCase(ligneArrivee, colonneArrivee, piece);
+            damier.setCase(ligneDepart, colonneDepart, null);
+            damier.setCase(ligneMilieu, colonneMilieu, null);
+
+        } else { // dame
             int pas = Math.abs(deltaLigne);
             int dirLigne = deltaLigne / pas;
             int dirColonne = deltaColonne / pas;
@@ -194,9 +185,8 @@ public class Mouvement {
             int ligneEnnemi = -1;
             int colonneEnnemi = -1;
 
-            // Trouver la position de l'ennemi
             while (ligneActuelle != ligneArrivee && colonneActuelle != colonneArrivee) {
-                if (damier.plateau[ligneActuelle][colonneActuelle] != null) {
+                if (damier.getCase(ligneActuelle, colonneActuelle) != null) {
                     ligneEnnemi = ligneActuelle;
                     colonneEnnemi = colonneActuelle;
                     break;
@@ -205,12 +195,11 @@ public class Mouvement {
                 colonneActuelle += dirColonne;
             }
 
-            damier.plateau[ligneArrivee][colonneArrivee] = piece;
-            damier.plateau[ligneDepart][colonneDepart] = null;
-            damier.plateau[ligneEnnemi][colonneEnnemi] = null;
+            damier.setCase(ligneArrivee, colonneArrivee, piece);
+            damier.setCase(ligneDepart, colonneDepart, null);
+            damier.setCase(ligneEnnemi, colonneEnnemi, null);
         }
 
-        // Enregistrement dans l'historique
         if (historique != null) {
             int numeroDepart = coordonneesVersNumeroManoury(ligneDepart, colonneDepart);
             int numeroArrivee = coordonneesVersNumeroManoury(ligneArrivee, colonneArrivee);
@@ -226,9 +215,6 @@ public class Mouvement {
         return true;
     }
 
-    /**
-     * Convertit des coordonnées en numéro Manoury.
-     */
     private static int coordonneesVersNumeroManoury(int ligne, int colonne) {
         int compteurManoury = 0;
         for (int r = 0; r < Damier.TAILLE; r++) {

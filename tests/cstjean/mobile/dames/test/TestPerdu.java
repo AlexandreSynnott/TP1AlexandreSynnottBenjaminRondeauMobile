@@ -30,7 +30,7 @@ public class TestPerdu {
         damier.setCase(4, 3, null); // Case libre pour se déplacer (dark square)
 
         assertFalse("Le joueur blanc ne doit pas avoir perdu (dame peut bouger)",
-                Perdu.joueurAPerdu(damier, Pion.Couleur.BLANC));
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
     }
 
     @Test
@@ -45,7 +45,7 @@ public class TestPerdu {
         damier.setCase(1, 0, null); // Case d'arrivée libre (dark square)
 
         assertFalse("Le joueur blanc ne doit pas avoir perdu (dame peut prendre)",
-                Perdu.joueurAPerdu(damier, Pion.Couleur.BLANC));
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class TestPerdu {
         damier.setCase(1, 8, null); // Case d'arrivée libre loin derrière (dark square)
 
         assertFalse("Le joueur blanc ne doit pas avoir perdu (dame peut prendre à longue distance)",
-                Perdu.joueurAPerdu(damier, Pion.Couleur.BLANC));
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class TestPerdu {
         damier.setCase(6, 5, null); // Bas-droite
 
         assertFalse("Le joueur blanc ne doit pas avoir perdu (dame peut bouger dans 4 directions)",
-                Perdu.joueurAPerdu(damier, Pion.Couleur.BLANC));
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class TestPerdu {
         damier.setCase(7, 6, new Pion(Pion.Couleur.NOIR)); // Derrière bas-droite
 
         assertTrue("Le joueur blanc doit avoir perdu (dame complètement bloquée)",
-                Perdu.joueurAPerdu(damier, Pion.Couleur.BLANC));
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
     }
 
     @Test
@@ -129,7 +129,7 @@ public class TestPerdu {
         // Note: La dame peut prendre le pion en (4,3) et atterrir en (3,2) ou plus loin
 
         assertFalse("Le joueur blanc ne doit pas avoir perdu (dame peut prendre même si déplacements simples bloqués)",
-                Perdu.joueurAPerdu(damier, Pion.Couleur.BLANC));
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
     }
 
     @Test
@@ -146,7 +146,7 @@ public class TestPerdu {
         damier.setCase(1, 0, null); // Case d'arrivée libre
 
         assertFalse("Le joueur blanc ne doit pas avoir perdu (dame peut prendre une autre dame)",
-                Perdu.joueurAPerdu(damier, Pion.Couleur.BLANC));
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
     }
 
     @Test
@@ -166,7 +166,7 @@ public class TestPerdu {
         damier.setCase(0, 0, null); // Case d'arrivée libre après les deux prises
 
         assertFalse("Le joueur blanc ne doit pas avoir perdu (dame peut faire une prise multiple)",
-                Perdu.joueurAPerdu(damier, Pion.Couleur.BLANC));
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
     }
 
     @Test
@@ -180,7 +180,7 @@ public class TestPerdu {
         damier.setCase(3, 2, null); // Case d'arrivée libre (dark square)
 
         assertFalse("Le joueur blanc ne doit pas avoir perdu (peut prendre)",
-                Perdu.joueurAPerdu(damier, Pion.Couleur.BLANC));
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
     }
 
     @Test
@@ -199,7 +199,7 @@ public class TestPerdu {
         damier.setCase(4, 7, new Pion(Pion.Couleur.NOIR));
 
         assertTrue("Le joueur blanc doit avoir perdu (complètement bloqué)",
-                Perdu.joueurAPerdu(damier, Pion.Couleur.BLANC));
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
     }
 
     /**
