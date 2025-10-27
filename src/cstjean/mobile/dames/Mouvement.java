@@ -41,13 +41,26 @@ public class Mouvement {
         return false;
     }
 
+    /**
+     * Vérifie si un déplacement simple (une case diagonale) est valide pour une pièce.
+     *
+     * <p>
+     * Un déplacement simple est autorisé :
+     * - pour un pion blanc : diagonale vers le haut
+     * - pour un pion noir : diagonale vers le bas
+     * - pour une dame : diagonale dans toutes les directions
+     *
+     * @param damier le damier de jeu
+     * @param ligneD la ligne de départ (0-indexée)
+     * @param colD   la colonne de départ (0-indexée)
+     * @param ligneA la ligne d'arrivée (0-indexée)
+     * @param colA   la colonne d'arrivée (0-indexée)
+     * @return true si le déplacement simple est valide, sinon false
+     */
     private static boolean estDeplacementSimpleValide(Damier damier, int ligneD, int colD,
                                                       int ligneA, int colA) {
 
         Pion piece = damier.getCase(ligneD, colD);
-        if (piece == null) {
-            return false;
-        }
 
         int deltaLigneSimple = ligneA - ligneD;
         int deltaColonneSimple = colA - colD;
@@ -74,13 +87,26 @@ public class Mouvement {
         return false;
     }
 
+    /**
+     * Vérifie si une prise (capture) est valide pour une pièce.
+     *
+     * <p>
+     * Pour un pion : une prise est valide s'il y a un pion adverse sur la case
+     * intermédiaire et que la case d'arrivée est vide.
+     * Pour une dame : elle peut capturer sur plusieurs cases en diagonale,
+     * mais seulement un adversaire à la fois et sans obstacles.
+     *
+     * @param damier        le damier de jeu
+     * @param ligneDepart   la ligne de départ (0-indexée)
+     * @param colonneDepart la colonne de départ (0-indexée)
+     * @param ligneArrivee  la ligne d'arrivée (0-indexée)
+     * @param colonneArrivee la colonne d'arrivée (0-indexée)
+     * @return true si la prise est valide, sinon false
+     */
     private static boolean estPriseValide(Damier damier, int ligneDepart, int colonneDepart,
                                           int ligneArrivee, int colonneArrivee) {
 
         Pion piece = damier.getCase(ligneDepart, colonneDepart);
-        if (piece == null) {
-            return false;
-        }
 
         int deltaLigne = ligneArrivee - ligneDepart;
         int deltaColonne = colonneArrivee - colonneDepart;
@@ -136,6 +162,17 @@ public class Mouvement {
         return false;
     }
 
+    /**
+     * Effectue un déplacement simple d'une pièce sur le damier et met à jour l'historique.
+     *
+     * @param damier        le damier de jeu
+     * @param historique    l'objet Historique (peut être null)
+     * @param ligneDepart   la ligne de départ (0-indexée)
+     * @param colonneDepart la colonne de départ (0-indexée)
+     * @param ligneArrivee  la ligne d'arrivée (0-indexée)
+     * @param colonneArrivee la colonne d'arrivée (0-indexée)
+     * @return true si le déplacement a été effectué, sinon false
+     */
     private static boolean effectuerDeplacementSimple(Damier damier, Historique historique,
                                                       int ligneDepart, int colonneDepart,
                                                       int ligneArrivee, int colonneArrivee) {
@@ -159,6 +196,22 @@ public class Mouvement {
         return true;
     }
 
+    /**
+     * Effectue une prise (capture) d'une pièce sur le damier et met à jour l'historique.
+     *
+     * <p>
+     * Pour les pions, la prise est sur une case adjacente.
+     * Pour les dames, la prise peut se faire sur plusieurs cases en diagonale
+     * mais seulement un adversaire à la fois.
+     *
+     * @param damier        le damier de jeu
+     * @param historique    l'objet Historique (peut être null)
+     * @param ligneDepart   la ligne de départ (0-indexée)
+     * @param colonneDepart la colonne de départ (0-indexée)
+     * @param ligneArrivee  la ligne d'arrivée (0-indexée)
+     * @param colonneArrivee la colonne d'arrivée (0-indexée)
+     * @return true si la prise a été effectuée, sinon false
+     */
     private static boolean effectuerPrise(Damier damier, Historique historique,
                                           int ligneDepart, int colonneDepart,
                                           int ligneArrivee, int colonneArrivee) {
@@ -215,6 +268,18 @@ public class Mouvement {
         return true;
     }
 
+    /**
+     * Convertit les coordonnées (ligne, colonne) du damier en numéro Manoury.
+     *
+     * <p>
+     * Le numéro Manoury correspond à la notation utilisée en jeu de dames
+     * pour identifier les cases valides (uniquement les cases foncées).
+     *
+     * @param ligne   la ligne de la case (0-indexée)
+     * @param colonne la colonne de la case (0-indexée)
+     * @return le numéro Manoury correspondant à la case, ou -1 si la case est invalide
+     */
+
     public static int coordonneesVersNumeroManoury(int ligne, int colonne) {
         int compteurManoury = 0;
         for (int r = 0; r < Damier.TAILLE; r++) {
@@ -229,4 +294,5 @@ public class Mouvement {
         }
         return -1;
     }
+
 }

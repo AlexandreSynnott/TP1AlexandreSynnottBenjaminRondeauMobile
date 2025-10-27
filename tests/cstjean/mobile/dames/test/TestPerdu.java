@@ -206,6 +206,79 @@ public class TestPerdu {
         assertTrue("Le joueur blanc doit avoir perdu (complètement bloqué)",
                 Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
     }
+    @Test
+    public void testJoueurPerdSansPions() {
+        viderDamier();
+
+        // Le joueur blanc n'a plus de pions
+        assertTrue("Le joueur blanc doit avoir perdu (sans pions)",
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
+    }
+    @Test
+    public void testJoueurPerdSansDeplacement() {
+        viderDamier();
+
+        // Le joueur blanc a encore des pions, mais il ne peut pas se déplacer
+        damier.setCase(6, 5, new Pion(Pion.Couleur.BLANC));
+        damier.setCase(5, 4, new Pion(Pion.Couleur.NOIR));
+        damier.setCase(5, 6, new Pion(Pion.Couleur.NOIR));
+        damier.setCase(4, 3, new Pion(Pion.Couleur.NOIR));
+        damier.setCase(4, 7, new Pion(Pion.Couleur.NOIR));
+
+        assertTrue("Le joueur blanc doit avoir perdu (pion bloqué sans mouvement)",
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
+    }
+    @Test
+    public void testDamePeutPrendreLongueDistanceDiagonale() {
+        viderDamier();
+
+        Dame dameBlanche = new Dame(Pion.Couleur.BLANC);
+        Pion pionNoir = new Pion(Pion.Couleur.NOIR);
+
+        damier.setCase(4, 4, dameBlanche);   // Dame blanche
+        damier.setCase(2, 2, pionNoir);      // Pion noir sur la diagonale
+        damier.setCase(1, 1, null);          // Case vide après le pion ennemi
+
+        assertTrue("La dame peut capturer le pion ennemi à longue distance",
+                Perdu.joueurPerd(damier, Pion.Couleur.NOIR) == false); // Le blanc ne perd pas
+    }
+    @Test
+    public void testDamePeutPrendreLongueDistance_LigneNonCouvert() {
+        viderDamier();
+
+        Dame dameBlanche = new Dame(Pion.Couleur.BLANC);
+        damier.setCase(5, 5, dameBlanche);
+
+        // Pion ennemi sur la diagonale
+        damier.setCase(4, 4, new Pion(Pion.Couleur.NOIR));
+
+        // Case vide après le pion ennemi pour déclencher "if (ennemiTrouve) return true;"
+        damier.setCase(3, 3, null);
+
+        assertFalse("La dame peut capturer le pion ennemi à longue distance (ennemiTrouve exécuté)",
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
+    }
+
+
+
+    @Test
+    public void testJoueurPerdAvecPionsBloquesSansPrises() {
+        viderDamier();
+
+        // Le joueur blanc a des pions mais aucun mouvement possible (aucune prise)
+        damier.setCase(6, 5, new Pion(Pion.Couleur.BLANC));
+        damier.setCase(5, 4, new Pion(Pion.Couleur.NOIR));
+        damier.setCase(5, 6, new Pion(Pion.Couleur.NOIR));
+        damier.setCase(4, 3, new Pion(Pion.Couleur.NOIR));
+        damier.setCase(4, 7, new Pion(Pion.Couleur.NOIR));
+        damier.setCase(3, 2, new Pion(Pion.Couleur.NOIR));
+
+        assertTrue("Le joueur blanc doit avoir perdu (pion bloqué sans possibilité de prise ou de déplacement)",
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
+    }
+
+
+
 
     /**
      * Vide complètement le damier.

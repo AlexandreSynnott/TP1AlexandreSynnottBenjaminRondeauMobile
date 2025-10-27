@@ -83,18 +83,12 @@ public class Perdu {
      */
     private static boolean peutBouger(Damier damier, int l, int c) {
         Pion pion = damier.getCase(l, c);
-        if (pion == null) {
-            return false;
-        }
 
-        // Directions de déplacement selon le type de pièce
         int[][] directions;
 
         if (pion instanceof Dame) {
-            // Les dames peuvent se déplacer dans les 4 directions
             directions = new int[][] { {-1, -1}, {-1, 1}, {1, -1}, {1, 1} };
         } else {
-            // Les pions ne peuvent avancer que dans 2 directions
             if (pion.getCouleur() == Pion.Couleur.BLANC) {
                 directions = new int[][] { {-1, -1}, {-1, 1} }; // Vers le haut
             } else {
@@ -102,7 +96,6 @@ public class Perdu {
             }
         }
 
-        // Vérifier chaque direction possible
         for (int[] dir : directions) {
             int newL = l + dir[0];
             int newC = c + dir[1];
@@ -126,15 +119,16 @@ public class Perdu {
      */
     private static boolean peutPrendre(Damier damier, int l, int c) {
         Pion pion = damier.getCase(l, c);
-        if (pion == null) {
-            return false;
+
+        Pion.Couleur ennemi = (pion.getCouleur() == Pion.Couleur.BLANC) ? Pion.Couleur.NOIR : Pion.Couleur.BLANC;
+
+        // Directions de prise pour pions normaux
+        int[][] directions;
+        if (pion instanceof Dame) {
+            directions = new int[][] { {-2, -2}, {-2, 2}, {2, -2}, {2, 2} }; // longue distance traitée après
+        } else {
+            directions = new int[][] { {-2, -2}, {-2, 2}, {2, -2}, {2, 2} }; // pions simples prennent sur 2 cases
         }
-
-        Pion.Couleur ennemi = (pion.getCouleur() == Pion.Couleur.BLANC) ?
-                Pion.Couleur.NOIR : Pion.Couleur.BLANC;
-
-        // Directions de prise (toujours 2 cases)
-        int[][] directions = new int[][] { {-2, -2}, {-2, 2}, {2, -2}, {2, 2} };
 
         for (int[] dir : directions) {
             int newL = l + dir[0];
@@ -142,15 +136,20 @@ public class Perdu {
             int midL = l + dir[0] / 2;
             int midC = c + dir[1] / 2;
 
-            if (estDansDamier(newL, newC) && damier.getCase(newL, newC) == null) {
-                Pion pionMilieu = damier.getCase(midL, midC);
-                if (pionMilieu != null && pionMilieu.getCouleur() == ennemi) {
-                    return true;
-                }
+            if (!estDansDamier(newL, newC)) {
+                continue;
+            }
+
+            if (damier.getCase(newL, newC) != null) {
+                continue;
+            }
+
+            Pion pionMilieu = damier.getCase(midL, midC);
+            if (pionMilieu != null && pionMilieu.getCouleur() == ennemi) {
+                return true;
             }
         }
 
-        // Vérifier les prises pour les dames (longue distance)
         if (pion instanceof Dame) {
             int[][] dameDirections = new int[][] { {-1, -1}, {-1, 1}, {1, -1}, {1, 1} };
 
@@ -164,21 +163,21 @@ public class Perdu {
 
                     if (currentPion == null) {
                         if (ennemiTrouve) {
-                            return true; // On peut prendre l'ennemi et atterrir ici
+                            return true;
                         }
                     } else if (currentPion.getCouleur() == pion.getCouleur()) {
-                        break; // Bloqué par un allié
+                        break;
                     } else {
                         if (ennemiTrouve) {
-                            break; // Plus d'un ennemi sur le chemin
-                        } else {
-                            ennemiTrouve = true;
+                            break;
                         }
+                        ennemiTrouve = true;
                     }
 
                     currentL += dir[0];
                     currentC += dir[1];
                 }
+
             }
         }
 
