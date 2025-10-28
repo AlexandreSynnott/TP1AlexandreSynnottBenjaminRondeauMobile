@@ -155,12 +155,7 @@ public class Perdu {
                 while (estDansDamier(currentL, currentC)) {
                     Pion currentPion = damier.getCase(currentL, currentC);
 
-                    if (currentPion == null) {
-                        if (ennemiTrouve) {
-                            // Case vide après avoir trouvé un ennemi → prise possible
-                            return true;
-                        }
-                    } else if (currentPion.getCouleur() == pion.getCouleur()) {
+                    if (currentPion.getCouleur() == pion.getCouleur()) {
                         // Bloqué par un allié → arrêt
                         break;
                     } else {
