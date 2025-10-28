@@ -131,9 +131,12 @@ public class Perdu {
             int midL = l + dir[0] / 2;
             int midC = c + dir[1] / 2;
 
-            if (!estDansDamier(newL, newC)) continue;
-            if (damier.getCase(newL, newC) != null) continue;
-
+            if (!estDansDamier(newL, newC)) {
+                continue;
+            }
+            if (damier.getCase(newL, newC) != null) {
+                continue;
+            }
             Pion pionMilieu = damier.getCase(midL, midC);
             if (pionMilieu != null && pionMilieu.getCouleur() == ennemi) {
                 return true;
@@ -176,7 +179,6 @@ public class Perdu {
 
         return false;
     }
-
 
     /**
      * Vérifie si une position donnée est dans les limites du damier.

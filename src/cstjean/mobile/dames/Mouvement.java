@@ -1,8 +1,14 @@
 package cstjean.mobile.dames;
 
+import java.util.ArrayList;
+import java.util.List;
 /**
  * Classe gérant les mouvements (déplacements et prises) sur le damier.
+ *
+ *
+ * @author Alexandre Synnott Benjamin Rondeau
  */
+
 public class Mouvement {
 
     /**
@@ -294,5 +300,36 @@ public class Mouvement {
         }
         return -1;
     }
+    /**
+     * Retourne la liste des coordonnées de toutes les cases atteignables
+     * par un pion à la position (ligne, colonne), compte tenu de l'état actuel du damier.
+     *
+     * @param damier le damier de jeu
+     * @param ligne  la ligne du pion
+     * @param colonne la colonne du pion
+     * @return liste de paires [ligne, colonne] pour chaque déplacement valide
+     */
 
+    public static List<int[]> deplacementsValides(Damier damier, int ligne, int colonne) {
+        List<int[]> deplacements = new ArrayList<>();
+        Pion piece = damier.getCase(ligne, colonne);
+        if (piece == null) {
+            return deplacements;
+        }
+
+        // Parcourir tout le damier pour voir où le pion peut aller
+        for (int l = 0; l < Damier.TAILLE; l++) {
+            for (int c = 0; c < Damier.TAILLE; c++) {
+                if (damier.getCase(l, c) == null) {
+                    // Vérifie si déplacement simple ou prise valide
+                    if (estDeplacementSimpleValide(damier, ligne, colonne, l, c) ||
+                            estPriseValide(damier, ligne, colonne, l, c)) {
+                        deplacements.add(new int[]{l, c});
+                    }
+                }
+            }
+        }
+
+        return deplacements;
+    }
 }

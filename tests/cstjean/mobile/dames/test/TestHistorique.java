@@ -205,6 +205,7 @@ public class TestHistorique {
     /**
      * Vérifie que l'on peut consulter le dernier mouvement sans le retirer.
      */
+
     @Test
     public void testConsulterDernierMouvement() {
         historique.ajouterMouvement("31-27");
@@ -247,6 +248,7 @@ public class TestHistorique {
     /**
      * Vérifie la méthode peutRevenirArriere().
      */
+
     @Test
     public void testPeutRevenirArriere() {
         assertFalse("Devrait être faux quand l'historique est vide", historique.peutRevenirArriere());
@@ -257,6 +259,7 @@ public class TestHistorique {
         historique.annulerDernierMouvement();
         assertFalse("Devrait redevenir faux après annulation", historique.peutRevenirArriere());
     }
+
     @Test
     public void testConsulterDernierMouvementQuandListeVide() {
         Historique historique = new Historique();

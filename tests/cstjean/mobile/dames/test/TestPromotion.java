@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import cstjean.mobile.dames.Affichage;
 import cstjean.mobile.dames.Dame;
 import cstjean.mobile.dames.Damier;
 import cstjean.mobile.dames.Pion;
@@ -102,6 +101,7 @@ public class TestPromotion {
         assertEquals("La dame devrait rester blanche",
                 Pion.Couleur.BLANC, damier.getCase(0, 1).getCouleur());
     }
+
     @Test
     public void testPionNoirSurLigneBlancheNonPromu() {
         viderDamier();
@@ -116,6 +116,7 @@ public class TestPromotion {
         assertFalse("Le pion noir sur la ligne blanche ne doit pas devenir une dame",
                 damier.getCase(0, 2) instanceof Dame);
     }
+
     @Test
     public void testPionBlancSurLigneNoireNonPromu() {
         viderDamier();
@@ -130,6 +131,7 @@ public class TestPromotion {
         assertFalse("Le pion blanc sur la ligne noire ne doit pas devenir une dame",
                 damier.getCase(Damier.TAILLE - 1, 3) instanceof Dame);
     }
+
     @Test
     public void testDameNoireDejaPresenteNonPromue() {
         viderDamier();
