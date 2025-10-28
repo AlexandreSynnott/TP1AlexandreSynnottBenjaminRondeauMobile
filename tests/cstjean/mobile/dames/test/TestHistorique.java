@@ -202,4 +202,66 @@ public class TestHistorique {
         assertTrue("Devrait contenir '31-27'", historiqueComplet.contains("31-27"));
         assertTrue("Devrait contenir '42-38'", historiqueComplet.contains("42-38"));
     }
+    /**
+     * Vérifie que l'on peut consulter le dernier mouvement sans le retirer.
+     */
+    @Test
+    public void testConsulterDernierMouvement() {
+        historique.ajouterMouvement("31-27");
+        historique.ajouterMouvement("42-38");
+
+        String dernier = historique.consulterDernierMouvement();
+
+        assertEquals("Le dernier mouvement consulté devrait être '42-38'", "42-38", dernier);
+        assertEquals("La taille de l'historique ne devrait pas changer après consultation",
+                2, historique.obtenirHistoriqueComplet().size());
+    }
+
+    /**
+     * Vérifie que l'on peut annuler le dernier mouvement ajouté.
+     */
+    @Test
+    public void testAnnulerDernierMouvement() {
+        historique.ajouterMouvement("31-27");
+        historique.ajouterMouvement("42-38");
+
+        String annule = historique.annulerDernierMouvement();
+
+        assertEquals("Le mouvement annulé devrait être le dernier ajouté", "42-38", annule);
+        assertEquals("Il devrait rester 1 mouvement après annulation",
+                1, historique.obtenirHistoriqueComplet().size());
+        assertEquals("Le mouvement restant devrait être '31-27'",
+                "31-27", historique.obtenirHistoriqueComplet().getFirst());
+    }
+
+    /**
+     * Vérifie qu'on ne peut pas annuler quand l'historique est vide.
+     */
+    @Test
+    public void testAnnulerDernierMouvementQuandVide() {
+        String annule = historique.annulerDernierMouvement();
+        assertNull("Annulation sur historique vide devrait retourner null", annule);
+        assertTrue("Historique devrait rester vide", historique.obtenirHistoriqueComplet().isEmpty());
+    }
+
+    /**
+     * Vérifie la méthode peutRevenirArriere().
+     */
+    @Test
+    public void testPeutRevenirArriere() {
+        assertFalse("Devrait être faux quand l'historique est vide", historique.peutRevenirArriere());
+
+        historique.ajouterMouvement("31-27");
+        assertTrue("Devrait être vrai après ajout d'un mouvement", historique.peutRevenirArriere());
+
+        historique.annulerDernierMouvement();
+        assertFalse("Devrait redevenir faux après annulation", historique.peutRevenirArriere());
+    }
+    @Test
+    public void testConsulterDernierMouvementQuandListeVide() {
+        Historique historique = new Historique();
+        String resultat = historique.consulterDernierMouvement();
+        assertTrue("Devrait retourner null quand aucun mouvement n'est enregistré", resultat == null);
+    }
+
 }

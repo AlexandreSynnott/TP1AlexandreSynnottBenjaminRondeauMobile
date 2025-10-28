@@ -168,7 +168,6 @@ public class TestMouvement {
         assertFalse(Mouvement.effectuerMouvement(damier, historique, 3, 2, 2, 1));
     }
 
-
     /** Vérifie qu'un pion ne peut pas aller sur une case déjà occupée. */
     @Test
     public void testDeplacementInvalideCaseOccupee() {
@@ -184,7 +183,6 @@ public class TestMouvement {
         assertFalse(Mouvement.effectuerMouvement(damier, historique, 6, 1, 6, 2));  // Horizontal
         assertFalse(Mouvement.effectuerMouvement(damier, historique, 6, 1, 7, 1));  // Vertical
     }
-
 
     /** Teste un déplacement simple d'une dame dans toutes les directions. */
     @Test
@@ -363,10 +361,6 @@ public class TestMouvement {
         assertEquals(-1, coordonneesVersNumeroManoury(10, 5));
     }
 
-    // =========================================================
-    // === TESTS SUPPLÉMENTAIRES POUR COUVERTURE À 100 % =======
-    // =========================================================
-
     /** Teste un mouvement totalement invalide (ni prise ni déplacement). */
     @Test
     public void testMouvementInvalideNiPriseNiDeplacement() {
@@ -402,6 +396,143 @@ public class TestMouvement {
         damier.setCase(5, 4, dame);
         assertFalse(Mouvement.effectuerMouvement(damier, historique, 5, 4, 2, 1));
     }
+    @Test
+    public void testEffectuerPriseDameReelle() {
+        viderDamier();
+
+        Dame dameBlanche = new Dame(Pion.Couleur.BLANC);
+        Pion pionNoir = new Pion(Pion.Couleur.NOIR);
+
+        damier.setCase(7, 0, dameBlanche);
+        damier.setCase(5, 2, pionNoir);
+
+        // Arrivée plus loin pour capturer à distance
+        boolean resultat = Mouvement.effectuerMouvement(damier, historique, 7, 0, 4, 3);
+        assertTrue(resultat);
+        assertNull("L’ennemi doit être supprimé après la prise", damier.getCase(5, 2));
+    }
+
+    @Test
+    public void testEffectuerPriseSansHistorique() {
+        viderDamier();
+
+        Pion pionBlanc = new Pion(Pion.Couleur.BLANC);
+        Pion pionNoir = new Pion(Pion.Couleur.NOIR);
+
+        damier.setCase(5, 4, pionBlanc);
+        damier.setCase(4, 3, pionNoir);
+
+        // Historique = null
+        boolean resultat = Mouvement.effectuerMouvement(damier, null, 5, 4, 3, 2);
+
+        assertTrue(resultat);
+        assertNull("Le pion capturé doit être retiré", damier.getCase(4, 3));
+    }
+    @Test
+    public void testEffectuerPrisePionNoir() {
+        viderDamier();
+
+        Pion pionNoir = new Pion(Pion.Couleur.NOIR);
+        Pion pionBlanc = new Pion(Pion.Couleur.BLANC);
+
+        damier.setCase(4, 3, pionNoir);
+        damier.setCase(5, 4, pionBlanc);
+
+        boolean resultat = Mouvement.effectuerMouvement(damier, historique, 4, 3, 6, 5);
+        assertTrue(resultat);
+        assertNull("Le pion blanc doit être capturé", damier.getCase(5, 4));
+    }
+    @Test
+    public void testEffectuerPrise_DameAvecHistoriqueEtParcours() {
+        Damier damier = new Damier();
+        Historique historique = new Historique();
+        Dame dame = new Dame(Pion.Couleur.BLANC);
+
+        // Positionne la Dame et un pion ennemi plus loin sur sa diagonale
+        damier.setCase(2, 2, dame);
+        damier.setCase(4, 4, new Pion(Pion.Couleur.NOIR));
+
+        // Déplace la Dame sur plusieurs cases pour forcer la boucle while
+        Mouvement.effectuerMouvement(damier, historique, 2, 2, 6, 6);
+
+        // Vérifie que la Dame a bien bougé
+        assertEquals(dame, damier.getCase(6, 6));
+        // Vérifie que le pion ennemi a bien été pris
+        assertNull(damier.getCase(4, 4));
+        // Vérifie que la case de départ est vide
+        assertNull(damier.getCase(2, 2));
+        // Vérifie que l'historique a bien enregistré le coup (couvre assert + historique)
+        assertFalse(historique.obtenirHistoriqueComplet().isEmpty());
+    }
+
+    /** Teste que coordonneesVersNumeroManoury renvoie des valeurs correctes pour toutes les cases noires. */
+    @Test
+    public void testToutesCasesNoiresManoury() {
+        int compteur = 0;
+        for (int r = 0; r < Damier.TAILLE; r++) {
+            for (int c = 0; c < Damier.TAILLE; c++) {
+                if ((r + c) % 2 == 1) {
+                    compteur++;
+                    assertEquals(compteur, coordonneesVersNumeroManoury(r, c));
+                } else {
+                    assertEquals(-1, coordonneesVersNumeroManoury(r, c));
+                }
+            }
+        }
+    }
+
+    /** Teste qu’un pion ne peut pas effectuer une prise sur une case vide sans pion intermédiaire. */
+    @Test
+    public void testPrisePionSansEnnemi() {
+        viderDamier();
+        Pion pion = new Pion(Pion.Couleur.BLANC);
+        damier.setCase(5, 4, pion);
+        assertFalse(Mouvement.effectuerMouvement(damier, historique, 5, 4, 3, 2));
+    }
+
+    /** Teste qu’une dame ne peut pas capturer si aucun pion n’est sur la diagonale. */
+    @Test
+    public void testPriseDameAucunEnnemi() {
+        viderDamier();
+        Dame dame = new Dame(Pion.Couleur.BLANC);
+        damier.setCase(5, 4, dame);
+        // Diagonale libre : 3,2
+        assertFalse(Mouvement.effectuerMouvement(damier, historique, 5, 4, 3, 2));
+    }
+
+    /** Teste qu’une dame ne peut pas capturer si un allié bloque la diagonale. */
+    @Test
+    public void testPriseDameAllieBloque() {
+        viderDamier();
+        Dame dame = new Dame(Pion.Couleur.BLANC);
+        Pion pionAllie = new Pion(Pion.Couleur.BLANC);
+        damier.setCase(5, 4, dame);
+        damier.setCase(4, 3, pionAllie);
+        // La case d'arrivée pourrait être libre, mais l'allié bloque
+        assertFalse(Mouvement.effectuerMouvement(damier, historique, 5, 4, 3, 2));
+    }
+
+    /** Teste un déplacement simple invalide pour une dame de plus d’une case. */
+    @Test
+    public void testDeplacementSimpleDameTropLong() {
+        viderDamier();
+        Dame dame = new Dame(Pion.Couleur.BLANC);
+        damier.setCase(5, 4, dame);
+        assertFalse(Mouvement.effectuerMouvement(damier, historique, 5, 4, 3, 2));
+    }
+
+    /** Teste qu’un déplacement simple avec historique null ne plante pas. */
+    @Test
+    public void testDeplacementSimpleSansHistorique() {
+        viderDamier();
+        Pion pion = new Pion(Pion.Couleur.BLANC);
+        damier.setCase(5, 4, pion);
+        boolean resultat = Mouvement.effectuerMouvement(damier, null, 5, 4, 4, 3);
+        assertTrue(resultat);
+        assertEquals(pion, damier.getCase(4, 3));
+        assertNull(damier.getCase(5, 4));
+    }
+
 
     /** Vide complètement le damier. */
     private void viderDamier() {

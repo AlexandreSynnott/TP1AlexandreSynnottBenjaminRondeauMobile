@@ -119,30 +119,20 @@ public class Perdu {
      */
     private static boolean peutPrendre(Damier damier, int l, int c) {
         Pion pion = damier.getCase(l, c);
-
         Pion.Couleur ennemi = (pion.getCouleur() == Pion.Couleur.BLANC) ? Pion.Couleur.NOIR : Pion.Couleur.BLANC;
 
         // Directions de prise pour pions normaux
-        int[][] directions;
-        if (pion instanceof Dame) {
-            directions = new int[][] { {-2, -2}, {-2, 2}, {2, -2}, {2, 2} }; // longue distance traitée après
-        } else {
-            directions = new int[][] { {-2, -2}, {-2, 2}, {2, -2}, {2, 2} }; // pions simples prennent sur 2 cases
-        }
+        int[][] directions = { {-2, -2}, {-2, 2}, {2, -2}, {2, 2} };
 
+        // Vérification des prises simples pour tous les pions
         for (int[] dir : directions) {
             int newL = l + dir[0];
             int newC = c + dir[1];
             int midL = l + dir[0] / 2;
             int midC = c + dir[1] / 2;
 
-            if (!estDansDamier(newL, newC)) {
-                continue;
-            }
-
-            if (damier.getCase(newL, newC) != null) {
-                continue;
-            }
+            if (!estDansDamier(newL, newC)) continue;
+            if (damier.getCase(newL, newC) != null) continue;
 
             Pion pionMilieu = damier.getCase(midL, midC);
             if (pionMilieu != null && pionMilieu.getCouleur() == ennemi) {
@@ -150,8 +140,9 @@ public class Perdu {
             }
         }
 
+        // Prises pour Dame
         if (pion instanceof Dame) {
-            int[][] dameDirections = new int[][] { {-1, -1}, {-1, 1}, {1, -1}, {1, 1} };
+            int[][] dameDirections = { {-1, -1}, {-1, 1}, {1, -1}, {1, 1} };
 
             for (int[] dir : dameDirections) {
                 int currentL = l + dir[0];
@@ -163,12 +154,15 @@ public class Perdu {
 
                     if (currentPion == null) {
                         if (ennemiTrouve) {
+                            // Case vide après avoir trouvé un ennemi → prise possible
                             return true;
                         }
                     } else if (currentPion.getCouleur() == pion.getCouleur()) {
+                        // Bloqué par un allié → arrêt
                         break;
                     } else {
                         if (ennemiTrouve) {
+                            // Deux ennemis consécutifs → impossible
                             break;
                         }
                         ennemiTrouve = true;
@@ -177,12 +171,12 @@ public class Perdu {
                     currentL += dir[0];
                     currentC += dir[1];
                 }
-
             }
         }
 
         return false;
     }
+
 
     /**
      * Vérifie si une position donnée est dans les limites du damier.

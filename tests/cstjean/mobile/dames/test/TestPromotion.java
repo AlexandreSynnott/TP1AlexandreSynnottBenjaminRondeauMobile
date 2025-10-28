@@ -102,6 +102,48 @@ public class TestPromotion {
         assertEquals("La dame devrait rester blanche",
                 Pion.Couleur.BLANC, damier.getCase(0, 1).getCouleur());
     }
+    @Test
+    public void testPionNoirSurLigneBlancheNonPromu() {
+        viderDamier();
+
+        Pion pionNoir = new Pion(Pion.Couleur.NOIR);
+        damier.setCase(0, 2, pionNoir); // Ligne blanche (0)
+
+        Promotion.verifierPromotion(damier);
+
+        assertTrue("Le pion noir sur la ligne blanche ne doit pas être promu",
+                damier.getCase(0, 2) instanceof Pion);
+        assertFalse("Le pion noir sur la ligne blanche ne doit pas devenir une dame",
+                damier.getCase(0, 2) instanceof Dame);
+    }
+    @Test
+    public void testPionBlancSurLigneNoireNonPromu() {
+        viderDamier();
+
+        Pion pionBlanc = new Pion(Pion.Couleur.BLANC);
+        damier.setCase(Damier.TAILLE - 1, 3, pionBlanc); // Ligne noire (dernier rang)
+
+        Promotion.verifierPromotion(damier);
+
+        assertTrue("Le pion blanc sur la ligne noire ne doit pas être promu",
+                damier.getCase(Damier.TAILLE - 1, 3) instanceof Pion);
+        assertFalse("Le pion blanc sur la ligne noire ne doit pas devenir une dame",
+                damier.getCase(Damier.TAILLE - 1, 3) instanceof Dame);
+    }
+    @Test
+    public void testDameNoireDejaPresenteNonPromue() {
+        viderDamier();
+
+        Dame dameExistante = new Dame(Pion.Couleur.NOIR);
+        damier.setCase(Damier.TAILLE - 1, 2, dameExistante);
+
+        Promotion.verifierPromotion(damier);
+
+        assertTrue("La dame noire en dernière ligne doit rester une dame",
+                damier.getCase(Damier.TAILLE - 1, 2) instanceof Dame);
+        assertEquals("La dame devrait rester noire",
+                Pion.Couleur.NOIR, damier.getCase(Damier.TAILLE - 1, 2).getCouleur());
+    }
 
     /**
      * Méthode utilitaire pour vider le damier avant chaque test.

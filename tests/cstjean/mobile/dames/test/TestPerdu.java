@@ -28,6 +28,23 @@ public class TestPerdu {
     public void setUp() {
         damier = new Damier();
     }
+    @Test
+    public void testDameAvecDeuxEnnemisSurLaDiagonale() {
+        viderDamier();
+
+        Dame dameBlanche = new Dame(Pion.Couleur.BLANC);
+        damier.setCase(6, 6, dameBlanche);
+
+        // Deux pions ennemis sur la même diagonale
+        damier.setCase(5, 5, new Pion(Pion.Couleur.NOIR));
+        damier.setCase(4, 4, new Pion(Pion.Couleur.NOIR));
+
+        // Case libre après, pour que la boucle while parcourt
+        damier.setCase(3, 3, null);
+
+        assertTrue("Le joueur noir ne doit pas avoir perdu (Dame blanche ne peut pas sauter deux ennemis d’affilée)",
+                Perdu.joueurPerd(damier, Pion.Couleur.NOIR) == false);
+    }
 
     /**
      * Vérifie qu'une dame peut se déplacer.
@@ -42,6 +59,30 @@ public class TestPerdu {
 
         assertFalse("Le joueur blanc ne doit pas avoir perdu (dame peut bouger)",
                 Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
+    }
+    @Test
+    public void testDamePeutPrendreLongueDiagonaleAvecCaseVideAvant() {
+        Damier damier = new Damier(); // crée un damier vide
+
+        // Place une dame blanche à (4,4)
+        Dame dameBlanche = new Dame(Pion.Couleur.BLANC);
+        damier.setCase(4, 4, dameBlanche);
+
+        // Pion noir à (2,2) sur la diagonale
+        Pion pionNoir = new Pion(Pion.Couleur.NOIR);
+        damier.setCase(2, 2, pionNoir);
+
+        // Case vide après le pion ennemi (1,1)
+        damier.setCase(1, 1, null);
+
+        // Vérifie que la dame peut prendre
+        boolean peutPrendre = Perdu.joueurPerd(damier, Pion.Couleur.NOIR) == false;
+
+        // Message du test
+        String message = "La dame devrait pouvoir prendre un pion ennemi en diagonale.";
+
+        // Assertion
+        assertTrue(message, peutPrendre);
     }
 
     /**
@@ -116,6 +157,78 @@ public class TestPerdu {
         damier.setCase(7, 6, new Pion(Pion.Couleur.NOIR));
 
         assertTrue("Le joueur blanc doit avoir perdu (dame complètement bloquée)",
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
+    }
+    @Test
+    public void testDameRencontreDeuxPionsEnnemiSurDiagonale() {
+        viderDamier();
+
+        Dame dameBlanche = new Dame(Pion.Couleur.BLANC);
+        damier.setCase(5, 5, dameBlanche);
+
+        // Premier pion ennemi
+        damier.setCase(4, 4, new Pion(Pion.Couleur.NOIR));
+        // Deuxième pion ennemi sur la même diagonale
+        damier.setCase(3, 3, new Pion(Pion.Couleur.NOIR));
+
+        // Case vide après le deuxième pion
+        damier.setCase(2, 2, null);
+
+        // Vérifie que le joueur noir ne perd pas (la dame ne peut pas sauter deux ennemis d'affilée)
+        assertFalse("La dame rencontre deux pions ennemis sur la diagonale, doit bloquer la prise",
+                Perdu.joueurPerd(damier, Pion.Couleur.NOIR));
+    }
+    @Test
+    public void testDameRencontrePionAllieLongueDiagonale() {
+        viderDamier();
+
+        Dame dameBlanche = new Dame(Pion.Couleur.BLANC);
+        damier.setCase(5, 5, dameBlanche);
+
+        // Pion allié sur la diagonale
+        damier.setCase(3, 3, new Pion(Pion.Couleur.BLANC));
+
+        // Case après pion allié vide
+        damier.setCase(2, 2, null);
+
+        // Le joueur noir ne doit pas perdre, la dame ne peut pas sauter le pion allié
+        assertFalse("La dame rencontre un pion allié sur la diagonale longue, ne peut pas prendre",
+                Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
+
+    }
+
+    @Test
+    public void testDameRencontreDeuxEnnemisConsecutifs() {
+        viderDamier();
+
+        Dame dameBlanche = new Dame(Pion.Couleur.BLANC);
+        damier.setCase(5, 5, dameBlanche);
+
+        // Deux pions ennemis consécutifs
+        damier.setCase(4, 4, new Pion(Pion.Couleur.NOIR));
+        damier.setCase(3, 3, new Pion(Pion.Couleur.NOIR));
+
+        // Case vide après le second pion
+        damier.setCase(2, 2, null);
+
+        // La dame ne peut pas sauter deux pions d’affilée
+        assertFalse("La dame rencontre deux pions ennemis consécutifs, ne peut pas prendre",
+                Perdu.joueurPerd(damier, Pion.Couleur.NOIR));
+    }
+
+    @Test
+    public void testDameCaseVideAvantEnnemi() {
+        viderDamier();
+
+        Dame dameBlanche = new Dame(Pion.Couleur.BLANC);
+        damier.setCase(5, 5, dameBlanche);
+
+        // Case vide avant le pion ennemi
+        damier.setCase(4, 4, null);
+        damier.setCase(3, 3, new Pion(Pion.Couleur.NOIR));
+
+        // La dame peut prendre car ennemi trouvé après case vide
+        assertFalse("La dame a une case vide avant le pion ennemi, doit pouvoir prendre",
                 Perdu.joueurPerd(damier, Pion.Couleur.BLANC));
     }
 
